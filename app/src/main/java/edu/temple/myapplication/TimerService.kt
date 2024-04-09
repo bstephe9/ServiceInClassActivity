@@ -10,7 +10,7 @@ import android.util.Log
 @Suppress("ControlFlowWithEmptyBody")
 class TimerService : Service() {
 
-    lateinit var timerHandler : Handler
+    private var timerHandler : Handler? = null
 
     private var isRunning = false
 
@@ -85,9 +85,10 @@ class TimerService : Service() {
             try {
                 for (i in startValue downTo 1)  {
                     Log.d("Countdown", i.toString())
+                    timerHandler?.sendEmptyMessage(i)
 
-                        while (paused);
-                        sleep(1000)
+                    while (paused);
+                    sleep(1000)
 
                 }
                 isRunning = false
