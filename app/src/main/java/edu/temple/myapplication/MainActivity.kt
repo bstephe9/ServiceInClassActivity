@@ -13,8 +13,7 @@ import android.os.Looper
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var timerBinder: TimerService.TimerBinder
-    var isConnected = false
+    var timerBinder: TimerService.TimerBinder? = null
 
     val timerHandler = Handler(Looper.getMainLooper()) {
         true
@@ -26,12 +25,11 @@ class MainActivity : AppCompatActivity() {
     val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             timerBinder = service as TimerService.TimerBinder
-            timerBinder.setHandler(timerHandler)
-            isConnected = true
+            timerBinder?.setHandler(timerHandler)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            isConnected = false
+            timerBinder = null
         }
     }
 
@@ -46,15 +44,15 @@ class MainActivity : AppCompatActivity() {
         )
 
         findViewById<Button>(R.id.startButton).setOnClickListener {
-            if (isConnected) timerBinder.start(10)
+            timerBinder?.start(10)
         }
 
         findViewById<Button>(R.id.pauseButton).setOnClickListener {
-            if (isConnected) timerBinder.pause()
+            timerBinder?.pause()
         }
         
         findViewById<Button>(R.id.stopButton).setOnClickListener {
-            if (isConnected) timerBinder.stop()
+            timerBinder?.stop()
         }
     }
 
